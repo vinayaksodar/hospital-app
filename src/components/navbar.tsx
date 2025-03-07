@@ -9,38 +9,38 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="border-b border-zinc-800">
+    <header className="bg-background sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
-              <HeartPulse className="h-6 w-6 text-white mr-2" />
-              <span className="text-xl font-bold text-white">
-                Gadad Hospital
-              </span>
+              <HeartPulse className="h-6 w-6  mr-2" />
+              <span className="text-xl font-bold ">Gadad Hospital</span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
+
           <nav className="hidden md:flex items-center space-x-8">
             <Link
               href="/"
-              className="text-zinc-400 hover:text-white transition-colors"
+              className="text-zinc-700 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
             >
               Home
             </Link>
             <Link
               href="/doctors"
-              className="text-zinc-400 hover:text-white transition-colors"
+              className="text-zinc-700 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
             >
               Doctors
             </Link>
             <Link
               href="/services"
-              className="text-zinc-400 hover:text-white transition-colors"
+              className="text-zinc-700 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
             >
               Services
             </Link>
+
             <Button>Login</Button>
           </nav>
 
