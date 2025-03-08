@@ -8,7 +8,7 @@ export default function AdminDashboard() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
-        <p className="text-muted-foreground">
+        <p className="text-neutral-500 dark:text-neutral-400">
           Manage hospital appointments and doctors
         </p>
       </div>
@@ -17,11 +17,11 @@ export default function AdminDashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Appointments</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <Calendar className="h-4 w-4 text-neutral-500 dark:text-neutral-400" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">254</div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-neutral-500 dark:text-neutral-400">
               Total appointments this month
             </p>
             <Button asChild className="mt-4 w-full">
@@ -33,11 +33,11 @@ export default function AdminDashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Doctors</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <Users className="h-4 w-4 text-neutral-500 dark:text-neutral-400" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">24</div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-neutral-500 dark:text-neutral-400">
               Active doctors on staff
             </p>
             <Button asChild className="mt-4 w-full">
