@@ -1,5 +1,11 @@
-import Footer from "@/components/footer";
-import Navbar from "@/components/navbar";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Clock, HeartPulse, Shield, Users } from "lucide-react";
 import Link from "next/link";
@@ -7,8 +13,6 @@ import Link from "next/link";
 export default function HomePage() {
   return (
     <div className="min-h-screen">
-      <Navbar />
-
       <main>
         {/* Hero Section */}
         <section className="py-20 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -30,70 +34,78 @@ export default function HomePage() {
         </section>
 
         {/* Features Section */}
-        <section className="py-20 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-6 flex flex-col items-center text-center">
-              <div className="bg-zinc-900 p-3 rounded-full mb-4">
-                <Users className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Expert Specialists</h3>
-              <p className="text-zinc-400">
-                Our team of renowned doctors provides exceptional care across
-                all medical specialties.
-              </p>
-            </div>
-            <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-6 flex flex-col items-center text-center">
-              <div className="bg-zinc-900 p-3 rounded-full mb-4">
-                <Clock className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">
-                24/7 Emergency Care
-              </h3>
-              <p className="text-zinc-400">
-                Round-the-clock emergency services with rapid response teams
-                ready to provide immediate care.
-              </p>
-            </div>
-            <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-6 flex flex-col items-center text-center">
-              <div className="bg-zinc-900 p-3 rounded-full mb-4">
-                <Shield className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">
-                Advanced Technology
-              </h3>
-              <p className="text-zinc-400">
-                State-of-the-art diagnostic and treatment equipment for precise
-                and effective healthcare.
-              </p>
-            </div>
-          </div>
-        </section>
+        <FeaturesSection></FeaturesSection>
 
         {/* CTA Section */}
         <section className="py-20 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto">
-          <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-8 md:p-12">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+          <Card className="p-6 md:p-8">
+            <CardContent className="flex flex-col md:flex-row items-center justify-between gap-6">
+              {/* Text Section */}
               <div>
-                <h2 className="text-2xl md:text-3xl font-bold mb-4">
+                <CardTitle className="text-2xl md:text-3xl font-bold">
                   Ready to experience better healthcare?
-                </h2>
-                <p className="text-zinc-400 max-w-2xl">
+                </CardTitle>
+                <CardDescription className="max-w-2xl font-light">
                   Schedule an appointment with one of our specialists and take
                   the first step towards better health.
-                </p>
+                </CardDescription>
               </div>
-              <Link href="/doctors" className="shrink-0">
-                <Button className="bg-white text-black hover:bg-zinc-200 px-8 py-6 text-base flex items-center gap-2">
+
+              {/* Button */}
+              <Link href="/doctors">
+                <Button className="px-8 py-6 text-base flex items-center gap-2">
                   Find a Doctor
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </section>
       </main>
-
-      <Footer />
     </div>
   );
 }
+
+export function FeaturesSection() {
+  return (
+    <section className="py-20 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {features.map(({ Icon, title, description }, index) => (
+          <Card
+            key={index}
+            className="p-6 flex flex-col items-center text-center"
+          >
+            <div className="p-3 rounded-full mb-4 border">
+              <Icon className="w-6 h-6" />
+            </div>
+            <CardHeader className="p-0">
+              <CardTitle className="text-xl">{title}</CardTitle>
+            </CardHeader>
+            <CardContent className="p-0 font-thin">{description}</CardContent>
+          </Card>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+const features = [
+  {
+    Icon: Users,
+    title: "Expert Specialists",
+    description:
+      "Our team of renowned doctors provides exceptional care across all medical specialties.",
+  },
+  {
+    Icon: Clock,
+    title: "24/7 Emergency Care",
+    description:
+      "Round-the-clock emergency services with rapid response teams ready to provide immediate care.",
+  },
+  {
+    Icon: Shield,
+    title: "Advanced Technology",
+    description:
+      "State-of-the-art diagnostic and treatment equipment for precise and effective healthcare.",
+  },
+];

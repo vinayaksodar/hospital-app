@@ -1,11 +1,10 @@
-import Footer from "@/components/footer";
-import Navbar from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import { Calendar, Clock, Star } from "lucide-react";
 
@@ -74,15 +73,13 @@ const doctors = [
 
 export default function DoctorsPage() {
   return (
-    <div className="min-h-screen bg-black text-white">
-      <Navbar />
-
+    <div className="min-h-screen">
       <main className="py-12 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="mb-12 text-center">
           <h1 className="text-3xl md:text-4xl font-bold mb-4">
             Our Specialists
           </h1>
-          <p className="text-zinc-400 max-w-2xl mx-auto">
+          <p className="text-muted-foreground max-w-2xl mx-auto">
             Meet our team of experienced doctors dedicated to providing
             exceptional care across all medical specialties.
           </p>
@@ -90,10 +87,7 @@ export default function DoctorsPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {doctors.map((doctor) => (
-            <Card
-              key={doctor.id}
-              className="bg-zinc-950 border-zinc-800 overflow-hidden"
-            >
+            <Card key={doctor.id} className="overflow-hidden">
               <div className="aspect-square relative">
                 <img
                   src={doctor.image || "/placeholder.svg"}
@@ -104,10 +98,10 @@ export default function DoctorsPage() {
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="text-xl font-semibold">{doctor.name}</h3>
-                    <p className="text-zinc-400">{doctor.specialty}</p>
+                    <CardTitle className="text-xl">{doctor.name}</CardTitle>
+                    <p className="text-muted-foreground">{doctor.specialty}</p>
                   </div>
-                  <div className="flex items-center bg-zinc-900 px-2 py-1 rounded text-sm">
+                  <div className="flex items-center bg-muted px-2 py-1 rounded text-sm">
                     <Star
                       className="w-4 h-4 text-yellow-500 mr-1"
                       fill="currentColor"
@@ -117,11 +111,11 @@ export default function DoctorsPage() {
                 </div>
               </CardHeader>
               <CardContent className="space-y-3 pb-4">
-                <div className="flex items-center text-zinc-400">
+                <div className="flex items-center text-muted-foreground">
                   <Clock className="w-4 h-4 mr-2" />
                   <span>{doctor.experience} experience</span>
                 </div>
-                <div className="flex items-center text-zinc-400">
+                <div className="flex items-center text-muted-foreground">
                   <Calendar className="w-4 h-4 mr-2" />
                   <div>
                     <div>{doctor.availability}</div>
@@ -130,16 +124,12 @@ export default function DoctorsPage() {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button className="w-full bg-white text-black hover:bg-zinc-200">
-                  Book Appointment
-                </Button>
+                <Button className="w-full">Book Appointment</Button>
               </CardFooter>
             </Card>
           ))}
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 }
