@@ -20,7 +20,7 @@ export async function GET(request: Request) {
 
     // Filter parameters
     const doctorIdParam = searchParams.get("doctorId");
-    const doctorId = doctorIdParam ? parseInt(doctorIdParam) : undefined;
+    const doctorId = doctorIdParam ? parseInt(doctorIdParam) : null;
     const startDate = searchParams.get("startDate");
     const endDate = searchParams.get("endDate");
 
@@ -36,7 +36,7 @@ export async function GET(request: Request) {
       .$dynamic();
 
     // Apply filters if they exist
-    if (doctorId) {
+    if (doctorId !== null) {
       query = query.where(eq(bookings.doctorId, doctorId));
     }
 
