@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { Calendar, Users, LayoutDashboard } from "lucide-react"
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Calendar, Users, LayoutDashboard } from "lucide-react";
 
 import {
   Sidebar,
@@ -13,10 +13,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarTrigger,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 
 export function AdminSidebar() {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   const menuItems = [
     {
@@ -26,10 +26,10 @@ export function AdminSidebar() {
       isActive: pathname === "/admin",
     },
     {
-      title: "Appointments",
+      title: "Bookings",
       icon: Calendar,
-      href: "/admin/appointments",
-      isActive: pathname === "/admin/appointments",
+      href: "/admin/bookings",
+      isActive: pathname === "/admin/bookings",
     },
     {
       title: "Doctors",
@@ -37,7 +37,7 @@ export function AdminSidebar() {
       href: "/admin/doctors",
       isActive: pathname === "/admin/doctors",
     },
-  ]
+  ];
 
   return (
     <Sidebar>
@@ -64,9 +64,10 @@ export function AdminSidebar() {
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter className="border-t p-4">
-        <p className="text-xs text-neutral-500 dark:text-neutral-400">Hospital Management System</p>
+        <p className="text-xs text-neutral-500 dark:text-neutral-400">
+          Hospital Management System
+        </p>
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
-
