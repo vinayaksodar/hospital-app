@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import Filter from "./filter";
 import BookingsTable from "./table";
 import { BookingsTableSkeleton } from "@/components/ui/skeletons";
+import { auth } from "@/lib/auth/auth";
+import { redirect } from "next/navigation";
 
 export default async function Page(props: {
   searchParams?: Promise<{
@@ -11,6 +13,14 @@ export default async function Page(props: {
     page?: string;
   }>;
 }) {
+  //TODO: Maybe add it in every page so that nothing gets shown to unauthenticated users not even page structure. See if middleware is answer
+  // // Check authentication first
+  // const session = await auth();
+
+  // if (!session?.user || session.user.role !== "admin") {
+  //   redirect("/login"); // Will redirect immediately without rendering anything
+  // }
+
   const searchParams = await props.searchParams;
   const doctorId = searchParams?.docterId || "";
   const startDate = searchParams?.startDate || "";

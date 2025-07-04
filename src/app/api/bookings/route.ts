@@ -8,9 +8,10 @@ export async function GET(request: Request) {
   try {
     const session = await auth();
     console.log(session);
-    if (!session?.user || session.user.role !== "admin") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-    }
+
+    // if (!session?.user || session.user.role !== "admin") {
+    //   return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    // }
 
     // Get query parameters from URL
     const { searchParams } = new URL(request.url);
@@ -97,7 +98,7 @@ export async function GET(request: Request) {
       },
     });
   } catch (error) {
-    console.error(error);
+    console.log(error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
