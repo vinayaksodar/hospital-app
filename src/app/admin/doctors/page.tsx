@@ -1,9 +1,16 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { useState, useEffect } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
@@ -12,13 +19,26 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Badge } from "@/components/ui/badge"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,10 +49,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Calendar, Edit, Search, Trash2, UserPlus } from "lucide-react"
-import { useForm } from "react-hook-form"
-import { ServicesCrud } from "@/components/services-crud"
+} from "@/components/ui/alert-dialog";
+import { Calendar, Edit, Search, Trash2, UserPlus } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { ServicesCrud } from "@/components/services-crud";
 
 // Specialties list
 const specialties = [
@@ -46,10 +66,18 @@ const specialties = [
   "Radiology",
   "Urology",
   "Gynecology",
-]
+];
 
 // Days of the week
-const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+const daysOfWeek = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
 
 // Time slots
 const timeSlots = [
@@ -62,7 +90,7 @@ const timeSlots = [
   "03:00 PM - 04:00",
   "04:00 PM - 05:00",
   "05:00 PM - 06:00",
-]
+];
 
 type Doctor = {
   userId: string;
@@ -81,15 +109,17 @@ type Doctor = {
   };
 };
 
-type Availability = { day: string; slots: string[] }
+type Availability = { day: string; slots: string[] };
 
 export default function DoctorsPage() {
-  const [doctors, setDoctors] = useState<Doctor[]>([])
-  const [searchTerm, setSearchTerm] = useState("")
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null)
-  const [selectedAvailability, setSelectedAvailability] = useState<Availability[]>([])
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
+  const [selectedAvailability, setSelectedAvailability] = useState<
+    Availability[]
+  >([]);
 
   const form = useForm({
     defaultValues: {
@@ -99,16 +129,16 @@ export default function DoctorsPage() {
       phone: "",
       status: "Active",
     },
-  })
+  });
 
   useEffect(() => {
     const fetchDoctors = async () => {
-      const res = await fetch("/api/doctors")
-      const data = await res.json()
-      setDoctors(data)
-    }
-    fetchDoctors()
-  }, [])
+      const res = await fetch("/api/doctors");
+      const data = await res.json();
+      setDoctors(data);
+    };
+    fetchDoctors();
+  }, []);
 
   // Filter doctors based on search
   const filteredDoctors = doctors.filter(
@@ -119,7 +149,7 @@ export default function DoctorsPage() {
           .toLowerCase()
           .includes(searchTerm.toLowerCase())) ||
       doctor.user.email.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  );
 
   // Handle adding a new doctor
   const handleAddDoctor = async (data: any) => {
@@ -127,111 +157,129 @@ export default function DoctorsPage() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...data, hospitalId: 1 }), // Assuming hospitalId 1 for now
-    })
+    });
     if (res.ok) {
-      const newDoctor = await res.json()
-      setDoctors([...doctors, newDoctor])
-      setIsAddDialogOpen(false)
-      form.reset()
-      setSelectedAvailability([])
+      const newDoctor = await res.json();
+      setDoctors([...doctors, newDoctor]);
+      setIsAddDialogOpen(false);
+      form.reset();
+      setSelectedAvailability([]);
     }
-  }
+  };
 
   // Handle editing a doctor
   const handleEditDoctor = async (data: any) => {
-    if (!selectedDoctor) return
+    if (!selectedDoctor) return;
 
-    const res = await fetch(`/api/doctors/${selectedDoctor.user.doctorProfiles[0].id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    })
+    const res = await fetch(
+      `/api/doctors/${selectedDoctor.user.doctorProfiles[0].id}`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }
+    );
 
     if (res.ok) {
-      const updatedDoctor = await res.json()
+      const updatedDoctor = await res.json();
       const updatedDoctors = doctors.map((doctor) =>
         doctor.user.doctorProfiles[0].id === updatedDoctor.id
-          ? { ...doctor, user: { ...doctor.user, doctorProfiles: [updatedDoctor] } }
+          ? {
+              ...doctor,
+              user: { ...doctor.user, doctorProfiles: [updatedDoctor] },
+            }
           : doctor
-      )
-      setDoctors(updatedDoctors)
-      setIsEditDialogOpen(false)
-      setSelectedDoctor(null)
-      setSelectedAvailability([])
+      );
+      setDoctors(updatedDoctors);
+      setIsEditDialogOpen(false);
+      setSelectedDoctor(null);
+      setSelectedAvailability([]);
     }
-  }
+  };
 
   // Handle removing a doctor
   const handleRemoveDoctor = async (id: number) => {
     const res = await fetch(`/api/doctors/${id}`, {
       method: "DELETE",
-    })
+    });
 
     if (res.ok) {
-      setDoctors(doctors.filter((doctor) => doctor.user.doctorProfiles[0].id !== id))
+      setDoctors(
+        doctors.filter((doctor) => doctor.user.doctorProfiles[0].id !== id)
+      );
     }
-  }
+  };
 
   // Open edit dialog with doctor data
   const openEditDialog = (doctor: Doctor) => {
-    setSelectedDoctor(doctor)
+    setSelectedDoctor(doctor);
     form.reset({
       name: doctor.user.name,
       specialty: doctor.user.doctorProfiles[0].speciality,
       email: doctor.user.email,
       phone: doctor.user.phone,
       status: "Active", // Status needs to be handled properly
-    })
+    });
     // setSelectedAvailability(doctor.availability)
-    setIsEditDialogOpen(true)
-  }
+    setIsEditDialogOpen(true);
+  };
 
   // Handle availability changes
   const toggleAvailabilitySlot = (day: string, slot: string) => {
     setSelectedAvailability((prev) => {
       // Find if day already exists in availability
-      const dayIndex = prev.findIndex((item) => item.day === day)
+      const dayIndex = prev.findIndex((item) => item.day === day);
 
       if (dayIndex === -1) {
         // Day doesn't exist, add new day with slot
-        return [...prev, { day, slots: [slot] }]
+        return [...prev, { day, slots: [slot] }];
       } else {
         // Day exists, check if slot exists
-        const dayItem = prev[dayIndex]
-        const slotIndex = dayItem.slots.indexOf(slot)
+        const dayItem = prev[dayIndex];
+        const slotIndex = dayItem.slots.indexOf(slot);
 
         if (slotIndex === -1) {
           // Slot doesn't exist, add it
-          const updatedDay = { ...dayItem, slots: [...dayItem.slots, slot] }
-          return [...prev.slice(0, dayIndex), updatedDay, ...prev.slice(dayIndex + 1)]
+          const updatedDay = { ...dayItem, slots: [...dayItem.slots, slot] };
+          return [
+            ...prev.slice(0, dayIndex),
+            updatedDay,
+            ...prev.slice(dayIndex + 1),
+          ];
         } else {
           // Slot exists, remove it
-          const updatedSlots = dayItem.slots.filter((s) => s !== slot)
+          const updatedSlots = dayItem.slots.filter((s) => s !== slot);
 
           if (updatedSlots.length === 0) {
             // No slots left for this day, remove the day
-            return prev.filter((item) => item.day !== day)
+            return prev.filter((item) => item.day !== day);
           } else {
             // Update slots for this day
-            const updatedDay = { ...dayItem, slots: updatedSlots }
-            return [...prev.slice(0, dayIndex), updatedDay, ...prev.slice(dayIndex + 1)]
+            const updatedDay = { ...dayItem, slots: updatedSlots };
+            return [
+              ...prev.slice(0, dayIndex),
+              updatedDay,
+              ...prev.slice(dayIndex + 1),
+            ];
           }
         }
       }
-    })
-  }
+    });
+  };
 
   // Check if a slot is selected
   const isSlotSelected = (day: string, slot: string) => {
-    const dayItem = selectedAvailability.find((item) => item.day === day)
-    return dayItem ? dayItem.slots.includes(slot) : false
-  }
+    const dayItem = selectedAvailability.find((item) => item.day === day);
+    return dayItem ? dayItem.slots.includes(slot) : false;
+  };
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Doctors</h1>
-        <p className="text-neutral-500 dark:text-neutral-400">Manage doctors and their availability</p>
+        <p className="text-neutral-500 dark:text-neutral-400">
+          Manage doctors and their availability
+        </p>
       </div>
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
@@ -255,7 +303,9 @@ export default function DoctorsPage() {
           <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
             <DialogHeader>
               <DialogTitle>Add New Doctor</DialogTitle>
-              <DialogDescription>Add a new doctor to the system and set their availability.</DialogDescription>
+              <DialogDescription>
+                Add a new doctor to the system and set their availability.
+              </DialogDescription>
             </DialogHeader>
 
             <Tabs defaultValue="details">
@@ -287,7 +337,10 @@ export default function DoctorsPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Specialty</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
                             <FormControl>
                               <SelectTrigger>
                                 <SelectValue placeholder="Select specialty" />
@@ -314,7 +367,10 @@ export default function DoctorsPage() {
                           <FormItem>
                             <FormLabel>Email</FormLabel>
                             <FormControl>
-                              <Input placeholder="doctor@hospital.com" {...field} />
+                              <Input
+                                placeholder="doctor@hospital.com"
+                                {...field}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -342,7 +398,10 @@ export default function DoctorsPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Status</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
                             <FormControl>
                               <SelectTrigger>
                                 <SelectValue placeholder="Select status" />
@@ -366,7 +425,9 @@ export default function DoctorsPage() {
                 <div className="space-y-4">
                   <div className="flex items-center">
                     <Calendar className="mr-2 h-4 w-4" />
-                    <h3 className="text-lg font-medium">Set Weekly Availability</h3>
+                    <h3 className="text-lg font-medium">
+                      Set Weekly Availability
+                    </h3>
                   </div>
 
                   <div className="space-y-6">
@@ -375,13 +436,21 @@ export default function DoctorsPage() {
                         <h4 className="font-medium">{day}</h4>
                         <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
                           {timeSlots.map((slot) => (
-                            <div key={`${day}-${slot}`} className="flex items-center space-x-2">
+                            <div
+                              key={`${day}-${slot}`}
+                              className="flex items-center space-x-2"
+                            >
                               <Checkbox
                                 id={`${day}-${slot}`}
                                 checked={isSlotSelected(day, slot)}
-                                onCheckedChange={() => toggleAvailabilitySlot(day, slot)}
+                                onCheckedChange={() =>
+                                  toggleAvailabilitySlot(day, slot)
+                                }
                               />
-                              <Label htmlFor={`${day}-${slot}`} className="text-sm">
+                              <Label
+                                htmlFor={`${day}-${slot}`}
+                                className="text-sm"
+                              >
                                 {slot}
                               </Label>
                             </div>
@@ -395,10 +464,15 @@ export default function DoctorsPage() {
             </Tabs>
 
             <DialogFooter>
-              <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setIsAddDialogOpen(false)}
+              >
                 Cancel
               </Button>
-              <Button onClick={form.handleSubmit(handleAddDoctor)}>Add Doctor</Button>
+              <Button onClick={form.handleSubmit(handleAddDoctor)}>
+                Add Doctor
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -420,22 +494,24 @@ export default function DoctorsPage() {
             {filteredDoctors.length > 0 ? (
               filteredDoctors.map((doctor) => (
                 <TableRow key={doctor.user.id}>
-                  <TableCell className="font-medium">{doctor.user.name}</TableCell>
-                  <TableCell>{doctor.user.doctorProfiles[0]?.speciality}</TableCell>
+                  <TableCell className="font-medium">
+                    {doctor.user.name}
+                  </TableCell>
+                  <TableCell>
+                    {doctor.user.doctorProfiles[0]?.speciality}
+                  </TableCell>
                   <TableCell>{doctor.user.email}</TableCell>
                   <TableCell>{doctor.user.phone}</TableCell>
                   <TableCell>
-                    <Badge
-                      variant={
-                        "default"
-                      }
-                    >
-                      Active
-                    </Badge>
+                    <Badge variant={"default"}>Active</Badge>
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
-                      <Button variant="outline" size="icon" onClick={() => openEditDialog(doctor)}>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => openEditDialog(doctor)}
+                      >
                         <Edit className="h-4 w-4" />
                         <span className="sr-only">Edit</span>
                       </Button>
@@ -451,12 +527,21 @@ export default function DoctorsPage() {
                           <AlertDialogHeader>
                             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                             <AlertDialogDescription>
-                              This will permanently remove {doctor.user.name} from the system. This action cannot be undone.
+                              This will permanently remove {doctor.user.name}{" "}
+                              from the system. This action cannot be undone.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleRemoveDoctor(doctor.user.doctorProfiles[0].id)}>Delete</AlertDialogAction>
+                            <AlertDialogAction
+                              onClick={() =>
+                                handleRemoveDoctor(
+                                  doctor.user.doctorProfiles[0].id
+                                )
+                              }
+                            >
+                              Delete
+                            </AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
                       </AlertDialog>
@@ -480,7 +565,9 @@ export default function DoctorsPage() {
         <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>Edit Doctor</DialogTitle>
-            <DialogDescription>Update doctor information and availability.</DialogDescription>
+            <DialogDescription>
+              Update doctor information and availability.
+            </DialogDescription>
           </DialogHeader>
 
           <Tabs defaultValue="details">
@@ -513,7 +600,10 @@ export default function DoctorsPage() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Specialty</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue />
@@ -568,7 +658,10 @@ export default function DoctorsPage() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Status</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue />
@@ -592,7 +685,9 @@ export default function DoctorsPage() {
               <div className="space-y-4">
                 <div className="flex items-center">
                   <Calendar className="mr-2 h-4 w-4" />
-                  <h3 className="text-lg font-medium">Set Weekly Availability</h3>
+                  <h3 className="text-lg font-medium">
+                    Set Weekly Availability
+                  </h3>
                 </div>
 
                 <div className="space-y-6">
@@ -601,13 +696,21 @@ export default function DoctorsPage() {
                       <h4 className="font-medium">{day}</h4>
                       <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
                         {timeSlots.map((slot) => (
-                          <div key={`${day}-${slot}`} className="flex items-center space-x-2">
+                          <div
+                            key={`${day}-${slot}`}
+                            className="flex items-center space-x-2"
+                          >
                             <Checkbox
                               id={`edit-${day}-${slot}`}
                               checked={isSlotSelected(day, slot)}
-                              onCheckedChange={() => toggleAvailabilitySlot(day, slot)}
+                              onCheckedChange={() =>
+                                toggleAvailabilitySlot(day, slot)
+                              }
                             />
-                            <Label htmlFor={`edit-${day}-${slot}`} className="text-sm">
+                            <Label
+                              htmlFor={`edit-${day}-${slot}`}
+                              className="text-sm"
+                            >
                               {slot}
                             </Label>
                           </div>
@@ -619,18 +722,27 @@ export default function DoctorsPage() {
               </div>
             </TabsContent>
             <TabsContent value="services" className="py-4">
-              {selectedDoctor && <ServicesCrud doctorId={selectedDoctor.user.doctorProfiles[0].id} />}
+              {selectedDoctor && (
+                <ServicesCrud
+                  doctorId={selectedDoctor.user.doctorProfiles[0].id}
+                />
+              )}
             </TabsContent>
           </Tabs>
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setIsEditDialogOpen(false)}
+            >
               Cancel
             </Button>
-            <Button onClick={form.handleSubmit(handleEditDoctor)}>Save Changes</Button>
+            <Button onClick={form.handleSubmit(handleEditDoctor)}>
+              Save Changes
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
 }

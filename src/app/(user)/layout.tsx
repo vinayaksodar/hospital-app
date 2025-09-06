@@ -7,12 +7,10 @@ export default function UserLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html>
-      <body>
-        <SiteHeader />
-        <main className="flex flex-1 flex-col">{children}</main>
-        <SiteFooter />
-      </body>
-    </html>
+    <>
+      <SiteHeader />
+      <main className="flex flex-1 flex-col">{children}</main>
+      <SiteFooter />
+    </>
   );
 }
