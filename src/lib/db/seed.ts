@@ -1,137 +1,124 @@
-import { db } from "./drizzle"; // Assuming you have a DB instance setup
+import { db } from "./drizzle";
 import {
   users,
-  accounts,
-  sessions,
-  verificationTokens,
-  authenticators,
+  hospitals,
+  memberships,
   doctors,
   schedules,
   availabilities,
-  consultations,
-  booking,
+  services,
+  encounters,
+  bookings,
+  patients
 } from "./schema";
 
 async function main() {
-  // Sample user IDs
-  const userId1 = crypto.randomUUID();
-  const userId2 = crypto.randomUUID();
-  const userId3 = crypto.randomUUID();
+  // Create a hospital
+  const [hospital] = await db
+    .insert(hospitals)
+    .values({ name: "General Hospital", slug: "general-hospital" })
+    .returning();
 
-  await db.insert(users).values([
-    {
-      id: userId1,
-      phone: "9876543210",
+  // Create a user for the doctor
+  const [doctorUser] = await db
+    .insert(users)
+    .values({
       name: "Dr. John Doe",
       email: "john.doe@example.com",
-      role: "doctor",
-      hospitalId: 1,
-    },
-    {
-      id: userId2,
-      phone: "1234567890",
-      name: "Jane Smith",
-      email: "jane.smith@example.com",
-      role: "patient",
-      hospitalId: 1,
-    },
-    {
-      id: userId3,
-      phone: "1112223333",
-      name: "Admin User",
-      email: "admin@example.com",
-      role: "admin",
-      hospitalId: 1,
-    },
-  ]);
+      phone: "9876543210",
+    })
+    .returning();
 
-  await db.insert(accounts).values([
-    {
-      userId: userId1,
-      type: "oauth",
-      provider: "google",
-      providerAccountId: "google-1234",
-    },
-    {
-      userId: userId2,
-      type: "credentials",
-      provider: "email",
-      providerAccountId: "jane.smith@example.com",
-    },
-  ]);
-
-  await db.insert(sessions).values([
-    {
-      sessionToken: "session-123",
-      userId: userId1,
-      expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
-    },
-  ]);
-
-  await db.insert(verificationTokens).values([
-    {
-      identifier: "jane.smith@example.com",
-      token: "verification-123",
-      expires: new Date(Date.now() + 1000 * 60 * 10),
-    },
-  ]);
-
-  await db.insert(authenticators).values([
-    {
-      credentialID: "cred-123",
-      userId: userId1,
-      providerAccountId: "google-1234",
-      credentialPublicKey: "publicKey1",
-      counter: 0,
-      credentialDeviceType: "mobile",
-      credentialBackedUp: true,
-    },
-  ]);
-
-  // Doctor entry
-  const doctorId1 = await db
+  // Create a doctor profile
+  const [doctor] = await db
     .insert(doctors)
     .values({
-      userId: userId1,
-      speciality: "ophthalmology",
-      aboutDetails: "Expert eye specialist",
-      image: "doctor1.jpg",
+      userId: doctorUser.id,
+      hospitalId: hospital.id,
+      speciality: "cardiology",
+      aboutDetails: "Expert cardiologist",
     })
-    .returning({ id: doctors.id });
+    .returning();
 
-  const scheduleId1 = await db
+  // Create a membership for the doctor
+  await db.insert(memberships).values({
+    userId: doctorUser.id,
+    hospitalId: hospital.id,
+    role: "doctor",
+  });
+
+  // Create a service for the doctor
+  const [service] = await db
+    .insert(services)
+    .values({
+      doctorId: doctor.id,
+      name: "Consultation",
+      duration: 30,
+      consultationFee: 100,
+      currency: "USD",
+    })
+    .returning();
+
+  // Create a schedule for the doctor
+  const [schedule] = await db
     .insert(schedules)
     .values({
+      doctorId: doctor.id,
       name: "Morning Shift",
-      timezone: "UTC+5:30",
-      doctorId: doctorId1[0].id,
+      timezone: "UTC",
     })
-    .returning({ id: schedules.id });
+    .returning();
 
-  await db.insert(availabilities).values([
-    {
-      scheduleId: scheduleId1[0].id,
-      days: [1, 3, 5],
-      startTime: "09:00",
-      endTime: "12:00",
-    },
-  ]);
+  // Create an availability for the schedule
+  await db.insert(availabilities).values({
+    scheduleId: schedule.id,
+    days: [1, 2, 3, 4, 5],
+    startTime: "09:00",
+    endTime: "12:00",
+  });
 
-  const consultationId1 = await db
-    .insert(consultations)
-    .values({ scheduleId: scheduleId1[0].id, duration: 30 })
-    .returning({ id: consultations.id });
+  // Create a patient
+  const [patientUser] = await db
+    .insert(users)
+    .values({
+      name: "Jane Smith",
+      email: "jane.smith@example.com",
+      phone: "1234567890",
+    })
+    .returning();
 
-  await db.insert(booking).values([
-    {
-      consultationId: consultationId1[0].id,
-      doctorId: doctorId1[0].id,
-      inviteeEmail: "jane.smith@example.com",
-      startDateUTC: new Date(),
-      endDateUTC: new Date(Date.now() + 30 * 60 * 1000),
-      cancelCode: "cancel-123",
-    },
-  ]);
+  const [patient] = await db.insert(patients).values({
+    userId: patientUser.id,
+    hospitalId: hospital.id,
+    dateOfBirth: new Date("1990-01-01")
+  }).returning();
+
+  // Create a membership for the patient
+  await db.insert(memberships).values({
+    userId: patientUser.id,
+    hospitalId: hospital.id,
+    role: "patient",
+  });
+
+  // Create an encounter
+  const [encounter] = await db
+    .insert(encounters)
+    .values({
+      patientId: patientUser.id,
+      doctorId: doctor.id,
+      hospitalId: hospital.id,
+      type: "online_booking",
+    })
+    .returning();
+
+  // Create a booking
+  await db.insert(bookings).values({
+    encounterId: encounter.id,
+    serviceId: service.id,
+    startDateUTC: new Date(),
+    endDateUTC: new Date(Date.now() + 30 * 60 * 1000),
+    status: "confirmed",
+  });
 
   console.log("Seed data inserted!");
 }

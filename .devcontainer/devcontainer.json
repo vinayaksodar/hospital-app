@@ -1,0 +1,37 @@
+// .devcontainer/devcontainer.json
+{
+  "name": "Hospital-app-dev",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20", // Node.js 20 (good for Next.js 14+)
+
+  // Forward Next.js dev server port
+  "forwardPorts": [3000],
+
+  // Run when container starts
+  "postCreateCommand": "npm install --legacy-peer-deps",
+
+  // VS Code extensions for Next.js
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "esbenp.prettier-vscode",       // Prettier
+        "dbaeumer.vscode-eslint",       // ESLint
+        "bradlc.vscode-tailwindcss"    // Tailwind CSS 
+      ]
+    }
+  },
+
+  // Features (auto-install dev tools)
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    }
+  },
+
+  // Keep Next.js dev server running
+  "runArgs": [
+    "--init",
+    "--env", "NEXT_TELEMETRY_DISABLED=1"
+  ]
+}

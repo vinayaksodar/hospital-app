@@ -1,6 +1,6 @@
 {
-  "id": "e22bb4e7-d557-48f9-8c87-c0d77af8edf0",
-  "prevId": "c0f72588-d76c-4b06-a0e3-d85d86a0d2e5",
+  "id": "38270106-b692-4bf8-ab33-20ff7748c151",
+  "prevId": "340d39d4-dd9b-4907-ac3d-d60e33c03a8f",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -91,91 +91,16 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.authenticators": {
-      "name": "authenticators",
-      "schema": "",
-      "columns": {
-        "credentialID": {
-          "name": "credentialID",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "userId": {
-          "name": "userId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "providerAccountId": {
-          "name": "providerAccountId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "credentialPublicKey": {
-          "name": "credentialPublicKey",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "counter": {
-          "name": "counter",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "credentialDeviceType": {
-          "name": "credentialDeviceType",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "credentialBackedUp": {
-          "name": "credentialBackedUp",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "transports": {
-          "name": "transports",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "authenticators_userId_users_id_fk": {
-          "name": "authenticators_userId_users_id_fk",
-          "tableFrom": "authenticators",
-          "tableTo": "users",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "authenticators_credentialID_unique": {
-          "name": "authenticators_credentialID_unique",
-          "nullsNotDistinct": false,
+      "compositePrimaryKeys": {
+        "accounts_provider_providerAccountId_pk": {
+          "name": "accounts_provider_providerAccountId_pk",
           "columns": [
-            "credentialID"
+            "provider",
+            "providerAccountId"
           ]
         }
       },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -247,21 +172,15 @@
           "primaryKey": true,
           "notNull": true
         },
-        "consultationId": {
-          "name": "consultationId",
+        "encounterId": {
+          "name": "encounterId",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
-        "doctorId": {
-          "name": "doctorId",
+        "serviceId": {
+          "name": "serviceId",
           "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "inviteeEmail": {
-          "name": "inviteeEmail",
-          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -277,93 +196,36 @@
           "primaryKey": false,
           "notNull": true
         },
-        "cancelCode": {
-          "name": "cancelCode",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "bookings_consultationId_consultations_id_fk": {
-          "name": "bookings_consultationId_consultations_id_fk",
-          "tableFrom": "bookings",
-          "tableTo": "consultations",
-          "columnsFrom": [
-            "consultationId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "bookings_doctorId_doctors_id_fk": {
-          "name": "bookings_doctorId_doctors_id_fk",
-          "tableFrom": "bookings",
-          "tableTo": "doctors",
-          "columnsFrom": [
-            "doctorId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.consultations": {
-      "name": "consultations",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "scheduleId": {
-          "name": "scheduleId",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "duration": {
-          "name": "duration",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "consultationFee": {
-          "name": "consultationFee",
-          "type": "integer",
+        "status": {
+          "name": "status",
+          "type": "bookingStatus",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": 500
-        },
-        "currency": {
-          "name": "currency",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'INR'"
+          "default": "'confirmed'"
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "consultations_scheduleId_schedules_id_fk": {
-          "name": "consultations_scheduleId_schedules_id_fk",
-          "tableFrom": "consultations",
-          "tableTo": "schedules",
+        "bookings_encounterId_encounters_id_fk": {
+          "name": "bookings_encounterId_encounters_id_fk",
+          "tableFrom": "bookings",
+          "tableTo": "encounters",
           "columnsFrom": [
-            "scheduleId"
+            "encounterId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "bookings_serviceId_services_id_fk": {
+          "name": "bookings_serviceId_services_id_fk",
+          "tableFrom": "bookings",
+          "tableTo": "services",
+          "columnsFrom": [
+            "serviceId"
           ],
           "columnsTo": [
             "id"
@@ -373,7 +235,15 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "bookings_encounterId_unique": {
+          "name": "bookings_encounterId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "encounterId"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -394,6 +264,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "hospitalId": {
+          "name": "hospitalId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
         "speciality": {
           "name": "speciality",
           "type": "speciality",
@@ -406,15 +282,31 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
-        },
-        "image": {
-          "name": "image",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "doctors_userId_hospitalId_index": {
+          "name": "doctors_userId_hospitalId_index",
+          "columns": [
+            {
+              "expression": "userId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "hospitalId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "doctors_userId_users_id_fk": {
           "name": "doctors_userId_users_id_fk",
@@ -422,6 +314,450 @@
           "tableTo": "users",
           "columnsFrom": [
             "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "doctors_hospitalId_hospitals_id_fk": {
+          "name": "doctors_hospitalId_hospitals_id_fk",
+          "tableFrom": "doctors",
+          "tableTo": "hospitals",
+          "columnsFrom": [
+            "hospitalId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.encounters": {
+      "name": "encounters",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "patientId": {
+          "name": "patientId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "doctorId": {
+          "name": "doctorId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hospitalId": {
+          "name": "hospitalId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "encounterDateUTC": {
+          "name": "encounterDateUTC",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "type": {
+          "name": "type",
+          "type": "encounterType",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "encounters_patientId_users_id_fk": {
+          "name": "encounters_patientId_users_id_fk",
+          "tableFrom": "encounters",
+          "tableTo": "users",
+          "columnsFrom": [
+            "patientId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "encounters_doctorId_doctors_id_fk": {
+          "name": "encounters_doctorId_doctors_id_fk",
+          "tableFrom": "encounters",
+          "tableTo": "doctors",
+          "columnsFrom": [
+            "doctorId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "encounters_hospitalId_hospitals_id_fk": {
+          "name": "encounters_hospitalId_hospitals_id_fk",
+          "tableFrom": "encounters",
+          "tableTo": "hospitals",
+          "columnsFrom": [
+            "hospitalId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.hospitals": {
+      "name": "hospitals",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "hospitals_slug_unique": {
+          "name": "hospitals_slug_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "slug"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.medical_records": {
+      "name": "medical_records",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "encounterId": {
+          "name": "encounterId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "notes": {
+          "name": "notes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "prescription": {
+          "name": "prescription",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "medical_records_encounterId_encounters_id_fk": {
+          "name": "medical_records_encounterId_encounters_id_fk",
+          "tableFrom": "medical_records",
+          "tableTo": "encounters",
+          "columnsFrom": [
+            "encounterId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "medical_records_encounterId_unique": {
+          "name": "medical_records_encounterId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "encounterId"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.memberships": {
+      "name": "memberships",
+      "schema": "",
+      "columns": {
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hospitalId": {
+          "name": "hospitalId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "userRole",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "memberships_userId_users_id_fk": {
+          "name": "memberships_userId_users_id_fk",
+          "tableFrom": "memberships",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "memberships_hospitalId_hospitals_id_fk": {
+          "name": "memberships_hospitalId_hospitals_id_fk",
+          "tableFrom": "memberships",
+          "tableTo": "hospitals",
+          "columnsFrom": [
+            "hospitalId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "memberships_userId_hospitalId_role_pk": {
+          "name": "memberships_userId_hospitalId_role_pk",
+          "columns": [
+            "userId",
+            "hospitalId",
+            "role"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.patients": {
+      "name": "patients",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hospitalId": {
+          "name": "hospitalId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "dateOfBirth": {
+          "name": "dateOfBirth",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "patients_userId_hospitalId_index": {
+          "name": "patients_userId_hospitalId_index",
+          "columns": [
+            {
+              "expression": "userId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "hospitalId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "patients_userId_users_id_fk": {
+          "name": "patients_userId_users_id_fk",
+          "tableFrom": "patients",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "patients_hospitalId_hospitals_id_fk": {
+          "name": "patients_hospitalId_hospitals_id_fk",
+          "tableFrom": "patients",
+          "tableTo": "hospitals",
+          "columnsFrom": [
+            "hospitalId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.payments": {
+      "name": "payments",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "encounterId": {
+          "name": "encounterId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "amount": {
+          "name": "amount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "currency": {
+          "name": "currency",
+          "type": "currency",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'INR'"
+        },
+        "status": {
+          "name": "status",
+          "type": "paymentStatus",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'pending'"
+        },
+        "paymentGatewayId": {
+          "name": "paymentGatewayId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "payments_encounterId_encounters_id_fk": {
+          "name": "payments_encounterId_encounters_id_fk",
+          "tableFrom": "payments",
+          "tableTo": "encounters",
+          "columnsFrom": [
+            "encounterId"
           ],
           "columnsTo": [
             "id"
@@ -470,6 +806,71 @@
         "schedules_doctorId_doctors_id_fk": {
           "name": "schedules_doctorId_doctors_id_fk",
           "tableFrom": "schedules",
+          "tableTo": "doctors",
+          "columnsFrom": [
+            "doctorId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.services": {
+      "name": "services",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "doctorId": {
+          "name": "doctorId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "duration": {
+          "name": "duration",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "consultationFee": {
+          "name": "consultationFee",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "currency": {
+          "name": "currency",
+          "type": "currency",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'INR'"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "services_doctorId_doctors_id_fk": {
+          "name": "services_doctorId_doctors_id_fk",
+          "tableFrom": "services",
           "tableTo": "doctors",
           "columnsFrom": [
             "doctorId"
@@ -542,12 +943,6 @@
           "primaryKey": true,
           "notNull": true
         },
-        "phone": {
-          "name": "phone",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
         "name": {
           "name": "name",
           "type": "text",
@@ -558,7 +953,7 @@
           "name": "email",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "emailVerified": {
           "name": "emailVerified",
@@ -572,19 +967,11 @@
           "primaryKey": false,
           "notNull": false
         },
-        "role": {
-          "name": "role",
-          "type": "userRole",
-          "typeSchema": "public",
+        "phone": {
+          "name": "phone",
+          "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "default": "'patient'"
-        },
-        "hospitalId": {
-          "name": "hospitalId",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
+          "notNull": false
         }
       },
       "indexes": {},
@@ -628,7 +1015,15 @@
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "verificationToken_identifier_token_pk": {
+          "name": "verificationToken_identifier_token_pk",
+          "columns": [
+            "identifier",
+            "token"
+          ]
+        }
+      },
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
@@ -636,12 +1031,56 @@
     }
   },
   "enums": {
+    "public.bookingStatus": {
+      "name": "bookingStatus",
+      "schema": "public",
+      "values": [
+        "pending",
+        "confirmed",
+        "completed",
+        "cancelled_by_patient",
+        "cancelled_by_doctor",
+        "no_show"
+      ]
+    },
+    "public.currency": {
+      "name": "currency",
+      "schema": "public",
+      "values": [
+        "USD",
+        "EUR",
+        "GBP",
+        "INR"
+      ]
+    },
+    "public.encounterType": {
+      "name": "encounterType",
+      "schema": "public",
+      "values": [
+        "online_booking",
+        "walk_in",
+        "teleconsultation",
+        "follow_up",
+        "historical_data_entry"
+      ]
+    },
+    "public.paymentStatus": {
+      "name": "paymentStatus",
+      "schema": "public",
+      "values": [
+        "pending",
+        "succeeded",
+        "failed"
+      ]
+    },
     "public.speciality": {
       "name": "speciality",
       "schema": "public",
       "values": [
         "ophthalmology",
         "pediatrics",
+        "cardiology",
+        "dermatology",
         "etc"
       ]
     },

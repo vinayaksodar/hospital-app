@@ -1,6 +1,5 @@
-import { auth } from "@/lib/auth/auth";
 import { db } from "@/lib/db/drizzle";
-import { consultations, doctors, users } from "@/lib/db/schema";
+import { doctors, users, schedules, availabilities, services } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
@@ -8,17 +7,33 @@ export async function GET(
   req: Request,
   { params }: { params: { id: string } }
 ) {
-  const session = await auth();
+  try {
+    const doctorDetails = await db.query.users.findFirst({
+      where: eq(users.id, params.id),
+      with: {
+        doctorProfiles: {
+          with: {
+            schedules: {
+              with: {
+                availabilities: true,
+              },
+            },
+            services: true,
+          },
+        },
+      },
+    });
 
-  if (!session?.user || session.user.role !== "admin") {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    if (!doctorDetails) {
+      return NextResponse.json({ error: "Doctor not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(doctorDetails);
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
-
-    const doctordetails = await db
-      .select()
-      .from(doctors)
-      .where(eq(doctors.userId, params.id))
-      .innerJoin(users, eq(doctors.userId, users.id))
-      .innerJoin(, eq(doctore));
-  // Get all the information about the doctor and his cosultations
 }

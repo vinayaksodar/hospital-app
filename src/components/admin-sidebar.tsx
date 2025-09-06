@@ -26,16 +26,28 @@ export function AdminSidebar() {
       isActive: pathname === "/admin",
     },
     {
-      title: "Bookings",
+      title: "Calendar",
       icon: Calendar,
-      href: "/admin/bookings",
-      isActive: pathname === "/admin/bookings",
+      href: "/admin/calendar",
+      isActive: pathname === "/admin/calendar",
     },
     {
       title: "Doctors",
       icon: Users,
       href: "/admin/doctors",
       isActive: pathname === "/admin/doctors",
+    },
+    {
+      title: "Patients",
+      icon: Users,
+      href: "/admin/patients",
+      isActive: pathname === "/admin/patients",
+    },
+    {
+      title: "Reports",
+      icon: LayoutDashboard,
+      href: "/admin/reports",
+      isActive: pathname === "/admin/reports",
     },
   ];
 
