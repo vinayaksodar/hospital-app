@@ -57,10 +57,13 @@ type Service = {
 export default function DoctorsPage() {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [isBookingDialogOpen, setIsBookingDialogOpen] = useState(false);
-  const [selectedDoctorForBooking, setSelectedDoctorForBooking] = useState<Doctor | null>(null);
+  const [selectedDoctorForBooking, setSelectedDoctorForBooking] =
+    useState<Doctor | null>(null);
   const [doctorServices, setDoctorServices] = useState<Service[]>([]);
   const [selectedService, setSelectedService] = useState<Service | null>(null);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    new Date()
+  );
   const [availableSlots, setAvailableSlots] = useState<string[]>([]);
   const [selectedTimeslot, setSelectedTimeslot] = useState<string | null>(null);
 
@@ -90,18 +93,25 @@ export default function DoctorsPage() {
     }
   }, [selectedDoctorForBooking]);
 
-    useEffect(() => {
+  useEffect(() => {
     if (selectedService && selectedDate && selectedDoctorForBooking) {
       const fetchAvailability = async () => {
-        const date = new Date(selectedDate.getTime() - (selectedDate.getTimezoneOffset() * 60000)).toISOString().split("T")[0];
+        const date = new Date(
+          selectedDate.getTime() - selectedDate.getTimezoneOffset() * 60000
+        )
+          .toISOString()
+          .split("T")[0];
         const res = await fetch(
-          `/api/doctors/${selectedDoctorForBooking.user.doctorProfiles[0].id}/availability?serviceId=${selectedService.id}&date=${date}`
+          `/api/doctors/${selectedDoctorForBooking.user.doctorProfiles[0].id}/available-slots?serviceId=${selectedService.id}&date=${date}`
         );
         if (res.ok) {
           const data = await res.json();
           const formattedSlots = data.map((slot: string) => {
             const date = new Date(slot);
-            return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+            return `${date.getHours().toString().padStart(2, "0")}:${date
+              .getMinutes()
+              .toString()
+              .padStart(2, "0")}`;
           });
           setAvailableSlots(formattedSlots);
         }
@@ -120,7 +130,12 @@ export default function DoctorsPage() {
   };
 
   const handleBooking = async () => {
-    if (!selectedDoctorForBooking || !selectedService || !selectedTimeslot || !selectedDate) {
+    if (
+      !selectedDoctorForBooking ||
+      !selectedService ||
+      !selectedTimeslot ||
+      !selectedDate
+    ) {
       alert("Please select a doctor, service, date, and timeslot.");
       return;
     }
@@ -134,7 +149,9 @@ export default function DoctorsPage() {
     bookingDate.setHours(hours, minutes);
 
     const startDateUTC = bookingDate.toISOString();
-    const endDateUTC = new Date(bookingDate.getTime() + selectedService.duration * 60000).toISOString();
+    const endDateUTC = new Date(
+      bookingDate.getTime() + selectedService.duration * 60000
+    ).toISOString();
 
     const bookingData = {
       serviceId: selectedService.id,
@@ -187,8 +204,12 @@ export default function DoctorsPage() {
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-start">
                   <div>
-                    <CardTitle className="text-xl">{doctor.user.name}</CardTitle>
-                    <p className="text-muted-foreground">{doctor.user.doctorProfiles[0]?.speciality}</p>
+                    <CardTitle className="text-xl">
+                      {doctor.user.name}
+                    </CardTitle>
+                    <p className="text-muted-foreground">
+                      {doctor.user.doctorProfiles[0]?.speciality}
+                    </p>
                   </div>
                   <div className="flex items-center bg-muted px-2 py-1 rounded text-sm">
                     <Star
@@ -203,39 +224,68 @@ export default function DoctorsPage() {
               <CardContent className="space-y-3 pb-4">
                 <div className="flex items-center text-muted-foreground">
                   <Clock className="w-4 h-4 mr-2" />
-                  <span>{/* Experience data not available from API yet */}</span>
+                  <span>
+                    {/* Experience data not available from API yet */}
+                  </span>
                 </div>
                 <div className="flex items-center text-muted-foreground">
                   <Calendar className="w-4 h-4 mr-2" />
                   <div>
-                    <div>{/* Availability data not available from API yet */}</div>
+                    <div>
+                      {/* Availability data not available from API yet */}
+                    </div>
                     <div>{/* Timing data not available from API yet */}</div>
                   </div>
                 </div>
               </CardContent>
               <CardFooter>
-                <Dialog open={isBookingDialogOpen} onOpenChange={setIsBookingDialogOpen}>
+                <Dialog
+                  open={isBookingDialogOpen}
+                  onOpenChange={setIsBookingDialogOpen}
+                >
                   <DialogTrigger asChild>
-                    <Button className="w-full" onClick={() => openBookingDialog(doctor)}>
+                    <Button
+                      className="w-full"
+                      onClick={() => openBookingDialog(doctor)}
+                    >
                       Book Appointment
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>Book Appointment with {selectedDoctorForBooking?.user.name}</DialogTitle>
-                      <DialogDescription>Select a service and an available time slot.</DialogDescription>
+                      <DialogTitle>
+                        Book Appointment with{" "}
+                        {selectedDoctorForBooking?.user.name}
+                      </DialogTitle>
+                      <DialogDescription>
+                        Select a service and an available time slot.
+                      </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4 py-4">
                       <div>
-                        <h3 className="text-lg font-medium mb-2">Select Service</h3>
-                        <Select onValueChange={(value) => setSelectedService(doctorServices.find(s => s.id === parseInt(value)) || null)}>
+                        <h3 className="text-lg font-medium mb-2">
+                          Select Service
+                        </h3>
+                        <Select
+                          onValueChange={(value) =>
+                            setSelectedService(
+                              doctorServices.find(
+                                (s) => s.id === parseInt(value)
+                              ) || null
+                            )
+                          }
+                        >
                           <SelectTrigger>
                             <SelectValue placeholder="Select a service" />
                           </SelectTrigger>
                           <SelectContent>
                             {doctorServices.map((service) => (
-                              <SelectItem key={service.id} value={service.id.toString()}>
-                                {service.name} - {service.consultationFee} {service.currency}
+                              <SelectItem
+                                key={service.id}
+                                value={service.id.toString()}
+                              >
+                                {service.name} - {service.consultationFee}{" "}
+                                {service.currency}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -244,7 +294,9 @@ export default function DoctorsPage() {
 
                       {selectedService && (
                         <div>
-                          <h3 className="text-lg font-medium mb-2">Select Date</h3>
+                          <h3 className="text-lg font-medium mb-2">
+                            Select Date
+                          </h3>
                           <DatePicker
                             selected={selectedDate}
                             onSelect={setSelectedDate}
@@ -276,7 +328,10 @@ export default function DoctorsPage() {
                       )}
                     </div>
                     <DialogFooter>
-                      <Button variant="outline" onClick={() => setIsBookingDialogOpen(false)}>
+                      <Button
+                        variant="outline"
+                        onClick={() => setIsBookingDialogOpen(false)}
+                      >
                         Cancel
                       </Button>
                       <Button onClick={handleBooking}>Confirm Booking</Button>
