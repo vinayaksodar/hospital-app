@@ -1,4 +1,3 @@
-
 import { db } from "@/lib/db/drizzle";
 import {
   bookings,
@@ -10,6 +9,16 @@ import {
 import { desc, eq, getTableColumns, count } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { alias } from "drizzle-orm/pg-core";
+import { z } from "zod";
+
+const createBookingSchema = z.object({
+  patientId: z.string(),
+  doctorId: z.number(),
+  hospitalId: z.number(),
+  serviceId: z.number(),
+  startDateUTC: z.string().datetime(),
+  endDateUTC: z.string().datetime(),
+});
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -49,4 +58,68 @@ export async function GET(req: Request) {
       totalPages: Math.ceil(totalBookings.length / limit),
     },
   });
+}
+
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+    const {
+      patientId,
+      doctorId,
+      hospitalId,
+      serviceId,
+      startDateUTC,
+      endDateUTC,
+    } = createBookingSchema.parse(body);
+
+    // Step 1: Create the encounter
+    const [newEncounter] = await db
+      .insert(encounters)
+      .values({
+        patientId,
+        doctorId,
+        hospitalId,
+        encounterDateUTC: new Date(startDateUTC),
+        type: "online_booking",
+      })
+      .returning();
+
+    if (!newEncounter) {
+      throw new Error("Failed to create encounter.");
+    }
+
+    try {
+      // Step 2: Create the booking
+      const [newBooking] = await db
+        .insert(bookings)
+        .values({
+          encounterId: newEncounter.id,
+          serviceId,
+          startDateUTC: new Date(startDateUTC),
+          endDateUTC: new Date(endDateUTC),
+          status: "confirmed",
+        })
+        .returning();
+
+      return NextResponse.json(newBooking, { status: 201 });
+    } catch (bookingError) {
+      // Step 3: If booking fails, delete the encounter
+      console.error(
+        "Booking creation failed, rolling back encounter...",
+        bookingError
+      );
+      await db.delete(encounters).where(eq(encounters.id, newEncounter.id));
+      throw new Error(
+        "Failed to create booking. The operation has been rolled back."
+      );
+    }
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({ error: error.issues }, { status: 400 });
+    }
+    console.error("Error creating booking:", error);
+    const message =
+      error instanceof Error ? error.message : "Internal Server Error";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
 }

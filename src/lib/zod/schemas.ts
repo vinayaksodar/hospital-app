@@ -4,12 +4,10 @@ import {
   accounts,
   sessions,
   verificationTokens,
-  authenticators,
   doctors,
   schedules,
   availabilities,
-  consultations,
-  booking,
+  bookings,
 } from "../db/schema";
 
 // Users
@@ -30,10 +28,6 @@ export const insertVerificationTokenSchema =
 export const selectVerificationTokenSchema =
   createSelectSchema(verificationTokens);
 
-// Authenticators
-export const insertAuthenticatorSchema = createInsertSchema(authenticators);
-export const selectAuthenticatorSchema = createSelectSchema(authenticators);
-
 // Doctors
 export const insertDoctorSchema = createInsertSchema(doctors);
 export const selectDoctorSchema = createSelectSchema(doctors);
@@ -46,10 +40,6 @@ export const selectScheduleSchema = createSelectSchema(schedules);
 export const insertAvailabilitySchema = createInsertSchema(availabilities);
 export const selectAvailabilitySchema = createSelectSchema(availabilities);
 
-// Consultations
-export const insertConsultationSchema = createInsertSchema(consultations);
-export const selectConsultationSchema = createSelectSchema(consultations);
-
 // Bookings
-export const insertBookingSchema = createInsertSchema(booking);
-export const selectBookingSchema = createSelectSchema(booking);
+export const insertBookingSchema = createInsertSchema(bookings);
+export const selectBookingSchema = createSelectSchema(bookings);

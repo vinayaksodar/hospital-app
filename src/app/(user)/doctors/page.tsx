@@ -141,7 +141,7 @@ export default function DoctorsPage() {
     }
 
     // For now, we'll use a placeholder patient ID and encounter type
-    const patientId = "clx000000000000000000000"; // Replace with actual patient ID from auth context
+    const patientId = "719956b3-2bab-48cf-a6f0-55ec77f20c73"; // Replace with actual patient ID from auth context
     const encounterType = "online_booking";
 
     const [hours, minutes] = selectedTimeslot.split(":").map(Number);
