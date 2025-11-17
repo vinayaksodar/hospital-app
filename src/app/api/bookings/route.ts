@@ -31,10 +31,8 @@ export async function GET(req: Request) {
     .select({
       ...getTableColumns(bookings),
       service: getTableColumns(services),
-      doctor: {
-        ...getTableColumns(doctors),
-        user: getTableColumns(users),
-      },
+      doctor: getTableColumns(doctors),
+      doctorUser: getTableColumns(users),
       patient: getTableColumns(patientUsers),
     })
     .from(bookings)
