@@ -9,12 +9,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Clock, HeartPulse, Shield, Users } from "lucide-react";
 import Link from "next/link";
-import { SiteHeader } from "@/components/site-header";
 
 export default function HomePage() {
   return (
     <div className="min-h-screen flex flex-col">
-      <SiteHeader />
       <main className="flex-1">
         {/* Hero Section */}
         <section className="py-20 px-4 md:px-6 lg:px-8 max-w-7xl mx-auto">
