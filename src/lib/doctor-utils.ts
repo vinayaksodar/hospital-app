@@ -33,6 +33,7 @@ export type Doctor = {
     name: string;
     email: string;
     phone?: string;
+    image?: string;
     doctorProfiles?: {
       id: number;
       speciality?: string;

@@ -12,8 +12,8 @@ export function middleware(request: NextRequest) {
   console.log(mainDomain);
 
   // Route for gadad-hospital
-  if (host === `gadad-hospital.${mainDomain}`) {
-    url.pathname = `/gadad-hospital${pathname}`;
+  if (host === `gadadhospital.${mainDomain}` && !pathname.startsWith("/gadadhospital")) {
+    url.pathname = `/gadadhospital${pathname}`;
     console.log(url);
     return NextResponse.rewrite(url);
   }

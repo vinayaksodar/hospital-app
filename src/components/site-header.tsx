@@ -1,6 +1,5 @@
 import { MainNav } from "@/components/main-nav";
 import { MobileNav } from "@/components/mobile-nav";
-import { ModeSwitcher } from "@/components/mode-switcher";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Icons } from "./icons";
@@ -27,7 +26,6 @@ export function SiteHeader() {
           <div className="md:mr-3">
             <div className="w-full flex-1 md:flex md:w-auto "></div>
             <nav className="flex items-center gap-0.5 md:gap-2">
-              <ModeSwitcher />
               <Button>Login</Button>
             </nav>
           </div>
