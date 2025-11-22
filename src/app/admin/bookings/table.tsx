@@ -22,8 +22,7 @@ export default async function BookingsTable({
   endDate: string;
   page: string;
 }) {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
-  let apiEndpoint = `${baseUrl}/api/bookings`;
+  let apiEndpoint = `/api/bookings`;
 
   // Create an object to hold query parameters
   const queryParams = new URLSearchParams();
