@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/select";
 import { useEffect, useState } from "react";
 import { DatePicker } from "@/components/date-picker";
+import { useRouter } from "next/navigation";
 
 type Doctor = {
   userId: string;
@@ -47,6 +48,7 @@ type Service = {
 };
 
 export function BookingButton({ doctor }: { doctor: Doctor }) {
+  const router = useRouter();
   const [isBookingDialogOpen, setIsBookingDialogOpen] = useState(false);
   const [doctorServices, setDoctorServices] = useState<Service[]>([]);
   const [selectedService, setSelectedService] = useState<Service | null>(null);
@@ -112,9 +114,6 @@ export function BookingButton({ doctor }: { doctor: Doctor }) {
       return;
     }
 
-    const patientId = "719956b3-2bab-48cf-a6f0-55ec77f20c73";
-    const encounterType = "online_booking";
-
     const [hours, minutes] = selectedTimeslot.split(":").map(Number);
     const bookingDate = new Date(selectedDate);
     bookingDate.setHours(hours, minutes);
@@ -128,11 +127,8 @@ export function BookingButton({ doctor }: { doctor: Doctor }) {
       serviceId: selectedService.id,
       startDateUTC,
       endDateUTC,
-      status: "pending",
-      patientId: patientId,
       doctorId: doctor.user.doctorProfiles[0].id,
       hospitalId: doctor.hospitalId,
-      type: encounterType,
     };
 
     const res = await fetch("/api/bookings", {
@@ -144,6 +140,9 @@ export function BookingButton({ doctor }: { doctor: Doctor }) {
     if (res.ok) {
       alert("Appointment booked successfully!");
       setIsBookingDialogOpen(false);
+    } else if (res.status === 401) {
+      alert("Please log in to book an appointment.");
+      router.push("/signin");
     } else {
       alert("Failed to book appointment.");
     }

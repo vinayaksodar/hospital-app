@@ -12,7 +12,10 @@ export function middleware(request: NextRequest) {
   console.log(mainDomain);
 
   // Route for gadad-hospital
-  if (host === `gadadhospital.${mainDomain}` && !pathname.startsWith("/gadadhospital")) {
+  if (
+    host === `gadadhospital.${mainDomain}` &&
+    !pathname.startsWith("/gadadhospital")
+  ) {
     url.pathname = `/gadadhospital${pathname}`;
     console.log(url);
     return NextResponse.rewrite(url);
@@ -39,6 +42,6 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      */
-    "/((?!api|admin|_next/static|_next/image|favicon.ico).*)",
+    "/((?!api|admin|signin|signup|_next/static|_next/image|favicon.ico).*)",
   ],
 };

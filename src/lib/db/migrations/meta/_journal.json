@@ -15,6 +15,13 @@
       "when": 1757169539378,
       "tag": "0001_needy_network",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1763806125762,
+      "tag": "0002_lucky_the_phantom",
+      "breakpoints": true
     }
   ]
 }

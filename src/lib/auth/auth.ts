@@ -2,7 +2,6 @@ import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { db } from "../db/drizzle";
-import { verifyOtp } from "../services/otpService";
 import { eq } from "drizzle-orm";
 import type { NextAuthConfig } from "next-auth";
 import { accounts, sessions, users, verificationTokens } from "../db/schema";
@@ -11,6 +10,7 @@ import type { Provider } from "next-auth/providers";
 import { Adapter } from "next-auth/adapters";
 import { encode as defaultEncode } from "next-auth/jwt";
 import { v4 as uuid } from "uuid";
+import bcrypt from "bcryptjs";
 
 const providers: Provider[] = [
   Credentials({
@@ -21,60 +21,35 @@ const providers: Provider[] = [
     async authorize(credentials) {
       const { email, password } = credentials;
 
-      return {
-        id: "10",
-        name: "vms",
-        email: "vms@gmail.com",
-        role: "admin",
+      const user = await db.query.users.findFirst({
+        where: (users, { eq }) => eq(users.email, email as string),
+      });
 
-        hospitalId: 1,
-        phone: null,
-        emailVerified: null,
+      if (!user) {
+        return null;
+      }
+
+      if (!user.hashedPassword) {
+        return null;
+      }
+
+      const isPasswordValid = await bcrypt.compare(
+        password as string,
+        user.hashedPassword
+      );
+
+      if (!isPasswordValid) {
+        return null;
+      }
+
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
       };
     },
   }),
-  // ✅ Phone Login (OTP-based)
-  Credentials({
-    name: "Phone Login",
-    credentials: {
-      phone: {},
-      otp: {},
-    },
-    authorize: async (credentials) => {
-      //TODO: Add zod validation don't directly store them in the database
-      const phone = credentials.phone as string;
-      const otp = credentials.otp as string;
 
-      if (!phone || !otp) {
-        throw new Error("Phone and OTP are required.");
-      }
-
-      // ✅ Step 1: Verify OTP
-      const isOtpValid = await verifyOtp(phone, otp);
-      if (!isOtpValid) throw new Error("Invalid OTP");
-
-      // ✅ Step 2: Check if user exists in DB
-      let user = await db.query.users.findFirst({
-        where: eq(users.phone, phone),
-      });
-
-      // ✅ Step 3: If user doesn't exist, create them
-      if (!user) {
-        const newUser = await db
-          .insert(users)
-          .values({
-            phone,
-            name: "New User", // Default name, update later
-            hospitalId: 1,
-          })
-          .returning();
-        user = newUser.length > 0 ? newUser[0] : undefined; // ✅ Extract first user safely
-      }
-
-      // Return a User object
-      return user || null; //As user can be undefined
-    },
-  }),
 
   Google({
     clientId: process.env.GOOGLE_CLIENT_ID,
@@ -101,10 +76,11 @@ const adapter = DrizzleAdapter(db, {
 }) as Adapter;
 
 export const authConfig: NextAuthConfig = {
+  secret: process.env.AUTH_SECRET,
   debug: true, // To debug in dev remove in production
-  // pages: {
-  //   signIn: "/login",
-  // },
+  pages: {
+    signIn: "/signin",
+  },
   providers: providers,
 
   adapter: adapter, // ✅ Store sessions in Drizzle
@@ -127,8 +103,9 @@ export const authConfig: NextAuthConfig = {
       if (user) {
         // Only update session when user is available
         session.user.id = user.id;
-        session.user.role = user.role;
-        session.user.hospitalId = user.hospitalId;
+        // The following properties are not on the user object returned from authorize
+        // session.user.role = user.role; 
+        // session.user.hospitalId = user.hospitalId;
       }
       return session;
     },
@@ -165,14 +142,16 @@ declare module "next-auth" {
   type UserRole = "patient" | "doctor" | "admin";
 
   interface User {
-    role: UserRole;
-    hospitalId: number; // Nullable for patients who may not belong to a hospital
+    // role: UserRole;
+    // hospitalId: number; 
   }
 
   interface Session {
     user: {
-      role: UserRole;
-      hospitalId: number;
+      // role: UserRole;
+      // hospitalId: number;
+    } & {
+      id: string;
     };
   }
 }

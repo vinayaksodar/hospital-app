@@ -10,9 +10,9 @@ import { desc, eq, getTableColumns, count } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { alias } from "drizzle-orm/pg-core";
 import { z } from "zod";
+import { auth } from "@/lib/auth/auth";
 
 const createBookingSchema = z.object({
-  patientId: z.string(),
   doctorId: z.number(),
   hospitalId: z.number(),
   serviceId: z.number(),
@@ -23,7 +23,7 @@ const createBookingSchema = z.object({
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const page = Number(searchParams.get("page") || "1");
-  const limit = Number(searchParams.get("limit") || "10");
+  const limit = Number(search_params.get("limit") || "10");
 
   const patientUsers = alias(users, "patientUsers");
 
@@ -60,15 +60,14 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    const session = await auth();
+    if (!session || !session.user || !session.user.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const patientId = session.user.id;
     const body = await req.json();
-    const {
-      patientId,
-      doctorId,
-      hospitalId,
-      serviceId,
-      startDateUTC,
-      endDateUTC,
-    } = createBookingSchema.parse(body);
+    const { doctorId, hospitalId, serviceId, startDateUTC, endDateUTC } =
+      createBookingSchema.parse(body);
 
     // Step 1: Create the encounter
     const [newEncounter] = await db
