@@ -1,4 +1,24 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Multi-Tenant Hospital Management System
+
+This is a multi-tenant hospital management application built with Next.js. It provides a robust platform for hospitals to efficiently manage doctors, patients, appointments, and medical records. Key features include streamlined online booking, dedicated landing pages for each hospital tenant, and a comprehensive administrative dashboard.
+
+## Application Screenshots
+
+![Screenshot 7](docs/images/screenshot-7.png)
+![Screenshot 1](docs/images/screenshot-1.png)
+![Screenshot 2](docs/images/screenshot-2.png)
+![Screenshot 3](docs/images/screenshot-3.png)
+![Screenshot 4](docs/images/screenshot-4.png)
+![Screenshot 5](docs/images/screenshot-5.png)
+![Screenshot 6](docs/images/screenshot-6.png)
+
+## Key Features
+
+- **Multi-Tenancy:** Supports multiple hospital instances, each with its own data and customizable landing page.
+- **Online Booking:** Patients can easily book appointments with doctors through a user-friendly interface.
+- **Doctor Management:** Features for managing doctor profiles, schedules, and services.
+- **Appointment Scheduling:** Efficient system for scheduling and tracking appointments.
+- **Administrative Dashboard:** A powerful admin interface for overall system management and insights.
 
 ## Getting Started
 
@@ -14,33 +34,8 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Important Note for Development:**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Due to the multi-tenancy architecture and subdomain routing, you must access the development server using `http://gadadhospital.lvh.me:3000/` instead of `http://localhost:3000/`. Subdomains do not resolve correctly on `localhost`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
-## Application Screenshots
-
-![Screenshot 1](docs/images/screenshot-1.png)
-![Screenshot 2](docs/images/screenshot-2.png)
-![Screenshot 3](docs/images/screenshot-3.png)
-![Screenshot 4](docs/images/screenshot-4.png)
-![Screenshot 5](docs/images/screenshot-5.png)
-![Screenshot 6](docs/images/screenshot-6.png)
-![Screenshot 7](docs/images/screenshot-7.png)
+Open [http://gadadhospital.lvh.me:3000/](http://gadadhospital.lvh.me:3000/) with your browser to see the result.
