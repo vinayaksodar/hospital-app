@@ -43,12 +43,6 @@ export function AdminSidebar() {
       href: "/admin/patients",
       isActive: pathname === "/admin/patients",
     },
-    {
-      title: "Reports",
-      icon: LayoutDashboard,
-      href: "/admin/reports",
-      isActive: pathname === "/admin/reports",
-    },
   ];
 
   return (
