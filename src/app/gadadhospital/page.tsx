@@ -112,17 +112,15 @@ export function ServicesSection() {
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {services.map(({ title, description, Icon }, index) => (
-          <Card
-            key={index}
-            className="p-6 flex flex-col items-center text-center"
-          >
-            <div className="p-3 rounded-full mb-4 border">
+          <Card key={index} className="flex flex-col items-center">
+            <div className="p-3 rounded-full mb-4 border mt-6">
               <Icon className="w-6 h-6" />
             </div>
-            <CardHeader>
+            <CardHeader className="grid-cols-1 w-full text-center">
               <CardTitle className="text-xl">{title}</CardTitle>
             </CardHeader>
-            <CardContent>
+
+            <CardContent className="text-center">
               <p className="font-thin">{description}</p>
             </CardContent>
           </Card>
