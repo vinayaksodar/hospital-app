@@ -1,66 +1,75 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import { Book, User, Stethoscope, Wallet } from "lucide-react"
+import { useEffect, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { Book, User, Stethoscope, Wallet } from "lucide-react";
 
 type DashboardMetrics = {
-  totalPatients: number
-  totalDoctors: number
-  totalAppointments: number
-  totalRevenue: number
-}
+  totalPatients: number;
+  totalDoctors: number;
+  totalAppointments: number;
+  totalRevenue: number;
+};
 
 type Appointment = {
   booking: {
-    id: number
-    startDateUTC: string
-  }
+    id: number;
+    startDateUTC: string;
+  };
   service: {
-    name: string
-  }
+    name: string;
+  };
   doctorUser: {
-    name: string
-  }
+    name: string;
+  };
   patientUser: {
-    name: string
-  }
-}
+    name: string;
+  };
+};
 
 export function AdminDashboard() {
-  const [metrics, setMetrics] = useState<DashboardMetrics | null>(null)
-  const [appointments, setAppointments] = useState<Appointment[]>([])
+  const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
 
   useEffect(() => {
     const fetchMetrics = async () => {
-      const res = await fetch("/api/admin/dashboard-metrics")
+      const res = await fetch("/api/admin/dashboard-metrics");
       if (res.ok) {
-        const data = await res.json()
-        setMetrics(data)
+        const data = await res.json();
+        setMetrics(data);
       }
-    }
+    };
 
     const fetchTodaysAppointments = async () => {
-      const res = await fetch("/api/admin/todays-appointments")
+      const res = await fetch("/api/admin/todays-appointments");
       if (res.ok) {
-        const data = await res.json()
-        setAppointments(data)
+        const data = await res.json();
+        setAppointments(data);
       }
-    }
+    };
 
-    fetchMetrics()
-    fetchTodaysAppointments()
-  }, [])
+    fetchMetrics();
+    fetchTodaysAppointments();
+  }, []);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Patients</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Patients
+            </CardTitle>
             <User className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -78,11 +87,15 @@ export function AdminDashboard() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Appointments</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Appointments
+            </CardTitle>
             <Book className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{metrics?.totalAppointments}</div>
+            <div className="text-2xl font-bold">
+              {metrics?.totalAppointments}
+            </div>
           </CardContent>
         </Card>
         <Card>
@@ -128,7 +141,11 @@ export function AdminDashboard() {
                   <TableCell>{appointment.patientUser.name}</TableCell>
                   <TableCell>{appointment.doctorUser.name}</TableCell>
                   <TableCell>{appointment.service.name}</TableCell>
-                  <TableCell>{new Date(appointment.booking.startDateUTC).toLocaleTimeString()}</TableCell>
+                  <TableCell>
+                    {new Date(
+                      appointment.booking.startDateUTC
+                    ).toLocaleTimeString()}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -136,5 +153,5 @@ export function AdminDashboard() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
