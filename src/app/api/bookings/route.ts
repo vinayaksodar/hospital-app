@@ -23,7 +23,7 @@ const createBookingSchema = z.object({
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const page = Number(searchParams.get("page") || "1");
-  const limit = Number(search_params.get("limit") || "10");
+  const limit = Number(searchParams.get("limit") || "10");
 
   const patientUsers = alias(users, "patientUsers");
 
