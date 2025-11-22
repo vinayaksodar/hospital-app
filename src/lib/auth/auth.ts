@@ -103,9 +103,22 @@ export const authConfig: NextAuthConfig = {
       if (user) {
         // Only update session when user is available
         session.user.id = user.id;
-        // The following properties are not on the user object returned from authorize
-        // session.user.role = user.role; 
-        // session.user.hospitalId = user.hospitalId;
+        const userMemberships = await db.query.memberships.findMany({
+          where: (memberships, { eq }) => eq(memberships.userId, user.id),
+        });
+
+        const adminMembership = userMemberships.find(
+          (m) => m.role === "admin"
+        );
+
+        if (adminMembership) {
+          session.user.role = "admin";
+          session.user.hospitalId = adminMembership.hospitalId;
+        } else if (userMemberships.length > 0) {
+          // If not an admin, just assign the first role found
+          session.user.role = userMemberships[0].role;
+          session.user.hospitalId = userMemberships[0].hospitalId;
+        }
       }
       return session;
     },
@@ -142,14 +155,14 @@ declare module "next-auth" {
   type UserRole = "patient" | "doctor" | "admin";
 
   interface User {
-    // role: UserRole;
-    // hospitalId: number; 
+    role: UserRole;
+    hospitalId: number; 
   }
 
   interface Session {
     user: {
-      // role: UserRole;
-      // hospitalId: number;
+      role: UserRole;
+      hospitalId: number;
     } & {
       id: string;
     };
