@@ -7,10 +7,11 @@ import { NextResponse } from "next/server";
 // Get a single patient by ID
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { params } = await context;
+    const { id } = await params;
     const patient = await db
       .select()
       .from(patients)

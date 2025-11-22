@@ -5,11 +5,13 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { params } = await context;
+    const { id } = await params;
     const scheduleDetails = await db.query.schedules.findFirst({
-      where: eq(schedules.id, parseInt(params.id)),
+      where: eq(schedules.id, parseInt(id)),
       with: {
         availabilities: true,
       },

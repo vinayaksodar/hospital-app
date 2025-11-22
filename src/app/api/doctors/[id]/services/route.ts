@@ -7,10 +7,11 @@ import { NextResponse } from "next/server";
 // Get all services for a doctor
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { params } = await context;
+    const { id } = await params;
     const doctorServices = await db
       .select()
       .from(services)
@@ -29,10 +30,11 @@ export async function GET(
 // Create a new service for a doctor
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { params } = await context;
+    const { id } = await params;
     const body = await req.json();
     const { name, duration, consultationFee, currency } = body;
 

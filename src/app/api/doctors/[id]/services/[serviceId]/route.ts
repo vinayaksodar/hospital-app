@@ -7,10 +7,11 @@ import { NextResponse } from "next/server";
 // Update a service
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string; serviceId: string } }
+  context: { params: Promise<{ id:string; serviceId: string }> }
 ) {
   try {
-    const { id, serviceId } = params;
+    const { params } = await context;
+    const { id, serviceId } = await params;
     const body = await req.json();
     const { name, duration, consultationFee, currency } = body;
 
@@ -33,10 +34,11 @@ export async function PUT(
 // Delete a service
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string; serviceId: string } }
+  context: { params: Promise<{ id: string; serviceId: string }> }
 ) {
   try {
-    const { id, serviceId } = params;
+    const { params } = await context;
+    const { id, serviceId } = await params;
 
     await db.delete(services).where(and(eq(services.id, Number(serviceId)), eq(services.doctorId, Number(id))));
 
