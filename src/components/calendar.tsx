@@ -1,18 +1,20 @@
 
 "use client"
 
-import { useEffect, useState } from "react"
 import FullCalendar from "@fullcalendar/react"
 import dayGridPlugin from "@fullcalendar/daygrid"
 import timeGridPlugin from "@fullcalendar/timegrid"
 import interactionPlugin from "@fullcalendar/interaction"
+import { EventSourceInput } from "@fullcalendar/core/index.js"
 
 type Booking = {
-  id: number;
-  encounterId: number;
-  startDateUTC: string;
-  endDateUTC: string;
-  status: string;
+  booking: {
+    id: number;
+    encounterId: number;
+    startDateUTC: string;
+    endDateUTC: string;
+    status: string;
+  };
   service: {
     id: number;
     doctorId: number;
@@ -23,41 +25,41 @@ type Booking = {
   };
   doctor: {
     id: number;
-    hospitalId: number;
     speciality: string;
-    aboutDetails: string;
     user: {
-      id: string;
       name: string;
       email: string;
-      emailVerified: null;
-      image: null;
-      phone: string;
     };
+  };
+  patient: {
+    name: string;
+    email: string;
   };
 };
 
 export function Calendar() {
-  const [events, setEvents] = useState([])
-
-  useEffect(() => {
-    const fetchBookings = async () => {
-      const res = await fetch("/api/bookings")
+  const fetchEvents = async (info: any, successCallback: any, failureCallback: any) => {
+    try {
+      const res = await fetch(
+        `/api/calendar/appointments?start=${info.startStr}&end=${info.endStr}`
+      );
       if (res.ok) {
-        const data = await res.json()
-        const bookings: Booking[] = data.bookings
+        const data = await res.json();
+        const bookings: Booking[] = data;
         const formattedEvents = bookings.map((booking) => ({
-          id: booking.id.toString(),
-          title: `${booking.service.name} - ${booking.doctor.user.name}`,
-          start: booking.startDateUTC,
-          end: booking.endDateUTC,
-        }))
-        setEvents(formattedEvents)
+          id: booking.booking.id.toString(),
+          title: `${booking.service.name} - Dr. ${booking.doctor.user.name} with ${booking.patient.name}`,
+          start: booking.booking.startDateUTC,
+          end: booking.booking.endDateUTC,
+        }));
+        successCallback(formattedEvents);
+      } else {
+        failureCallback(new Error("Failed to fetch bookings"));
       }
+    } catch (error) {
+      failureCallback(error);
     }
-
-    fetchBookings()
-  }, [])
+  };
 
   return (
     <div className="p-4">
@@ -69,7 +71,7 @@ export function Calendar() {
           center: "title",
           right: "dayGridMonth,timeGridWeek,timeGridDay",
         }}
-        events={events}
+        events={fetchEvents as EventSourceInput}
       />
     </div>
   )
